@@ -410,29 +410,10 @@ runsusie=function(d,suffix=1,
     if(!converged)
       maxit=maxit * 100 # no point in half measures!
   }
- res=annotate_susie(res, snp, LD)
-  ## ## prune sets in high LD
-  ## if(!is.null(r2.prune))
-  ##   res=.susie_prune(res,r2.prune)
-
-  ## if(!all(keep)) {
-  ##   res$trimz=trimz
-  ##   res$trimpeaks=trimpeaks
-  ##   snps_to_add=setdiff(dbak$snp,snp)
-  ##   res$pip=c(structure(rep(0,length(snps_to_add)), names=snps_to_add),
-  ##             res$pip)
-  ##   res$alpha=cbind(matrix(apply(res$alpha,1,min,na.rm=TRUE),
-  ##                          nrow(res$alpha),length(snps_to_add),
-  ##                          dimnames=list(rownames(res$alpha),snps_to_add)),
-  ##                   res$alpha)
-  ##   res$alpha=res$alpha/matrix(rowSums(res$alpha),nrow(res$alpha),ncol(res$alph))
-  ##   res$lbf_variable=cbind(matrix(apply(res$lbf_variable,1,min,na.rm=TRUE),
-  ##                                 nrow(res$lbf_variable),length(snps_to_add),
-  ##                                 dimnames=list(rownames(res$lbf_variable),snps_to_add)),
-  ##                          res$lbf_variable)
-  ## }
+  res=annotate_susie(res, snp, LD)
   res
 }
+
 ##' annotate susie_rss output for use with coloc_susie
 ##'
 ##' coloc functions need to be able to link summary stats from two
@@ -463,19 +444,6 @@ annotate_susie=function(res,snp, LD) {
     res$sld=.susie_setld(res$sets$cs,LD)
     res$pruned=FALSE
     res
-}
-
-.susie_prune=function(res,r2.prune) {
-  s=res$sets$cs
-  if(length(s)>1) {
-    wh=which(res$sld>r2.prune,arr.ind=TRUE)
-    if(length(wh)) {
-      message("pruning sets in high LD")
-      res = .susie_dropsets(res, wh)
-      res$pruned=TRUE
-    }
-  }
-  res
 }
 
 .susie_setld=function(s,ld) {
